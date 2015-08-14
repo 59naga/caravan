@@ -1,0 +1,43 @@
+{
+  "name": "caravan",
+  "main": "caravan.min.js",
+
+  "opc-scripts": {
+    "build": [
+      "browserify ./src",
+      "--transform coffeeify",
+      "--standalone caravan",
+      "--extension .coffee",
+      "--debug"
+    ],
+    "uglify": [
+      "uglifyjs",
+
+      "caravan.js",
+      "--in-source-map",
+      "caravan.js.map",
+
+      "--mangle",
+      "--compress",
+
+      "--output",
+      "caravan.min.js",
+      "--source-map",
+      "caravan.min.js.map"
+     ]
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "*.coffee",
+    "src",
+    "test"
+  ],
+
+  "authors": [
+    "59naga <i59naga@icloud.com>"
+  ],
+  "homepage": "https://github.com/59naga/caravan",
+  "license": "MIT",
+}

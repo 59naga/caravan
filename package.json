@@ -1,0 +1,68 @@
+{
+  "name": "caravan",
+  "version": "0.0.0-alpha",
+  "description": "throttle requests for easy to scrape",
+
+  "browser": {
+    "./src": false,
+    "request": false
+  },
+
+  "scripts": {
+    "start": "jasminetea --file index.coffee --watch",
+    "localhost": "zuul test --ui jasmine2 --server \"coffee test/app.coffee\" --local 59798 --open",
+
+    "test": "jasminetea --file index.coffee --lint --cover --report",
+    "test-cloud": "zuul test",
+
+    "prepublish": "node -e \"if(process.env.TRAVIS){}else{process.exit(1)}\" && npm run compile || echo skip prepublish",
+    "compile": "coffee --bare --compile index.coffee",
+    "postcompile": "coffee --output lib --bare --compile src",
+
+    "prebuild": "$(opc bower opc-scripts.build) | exorcist $(opc bower name).js.map > $(opc bower name).js",
+    "build": "$(opc bower opc-scripts.uglify)",
+    "postbuild": "rm $(opc bower name).js $(opc bower name).js.map && wc -c $(opc bower main)",
+    "update": "git tag v$(opc package version) && git push --tags"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm test"
+    }
+  },
+
+  "dependencies": {
+    "bluebird": "^2.9.34",
+    "request": "^2.60.0",
+    "throat": "^2.0.2",
+    "xhr": "^2.0.3"
+  },
+  "devDependencies": {
+    "express": "^4.13.3",
+    "ghooks": "^0.3.2",
+    "jasminetea": "^0.2.1",
+    "object-parser-cli": "0.0.1-alpha.1"
+  },
+  "extraDependencies": {
+    "coffee-script": "^1.9.3",
+
+    "zuul": "^3.0.0",
+
+    "browserify": "^10.2.4",
+    "coffeeify": "^1.1.0",
+    "exorcist": "^0.4.0",
+    "uglifyjs": "^2.4.10"
+  },
+  
+  "keywords": [
+  ],
+  "author": "59naga <i59naga@icloud.com> (http://berabou.me)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/59naga/caravan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/59naga/caravan/issues"
+  },
+  "homepage": "https://github.com/59naga/caravan#readme"
+}
