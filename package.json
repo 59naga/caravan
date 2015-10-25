@@ -1,13 +1,10 @@
 {
   "name": "caravan",
-  "version": "0.0.0-alpha",
-  "description": "throttle requests for easy to scrape",
+  "version": "0.0.0-beta",
+  "description": "throttle GET requests for easy to scrape",
 
-  "browser": {
-    "./src": false,
-    "request": false
-  },
-
+  "main": "lib",
+  "files": ["lib"],
   "scripts": {
     "start": "jasminetea --file index.coffee --watch",
     "localhost": "zuul test --ui jasmine2 --server \"coffee test/app.coffee\" --local 59798 --open",
@@ -32,15 +29,14 @@
 
   "dependencies": {
     "bluebird": "^2.9.34",
-    "request": "^2.60.0",
-    "throat": "^2.0.2",
-    "xhr": "^2.0.3"
+    "superagent": "^1.4.0",
+    "throat": "^2.0.2"
   },
   "devDependencies": {
     "express": "^4.13.3",
     "ghooks": "^0.3.2",
     "jasminetea": "^0.2.1",
-    "object-parser-cli": "0.0.1-alpha.1"
+    "object-parser-cli": "0.0.1"
   },
   "extraDependencies": {
     "coffee-script": "^1.9.3",

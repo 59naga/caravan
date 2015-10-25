@@ -1,11 +1,12 @@
 # Dependencies
 Promise= require 'bluebird'
-request= unless window? then require 'request' else require 'xhr'
+request= require 'superagent'
 throat= require 'throat'
 
 # Public
 class Caravan
   fetchAll: (urls,options={})->
+    urls= [urls] if typeof urls is 'string'
     options.concurrency?= 1
 
     concurrency= throat options.concurrency
@@ -24,7 +25,7 @@ class Caravan
     .then (results)->
       for result in results
         if result.isFulfilled()
-          result.value().body
+          result.value().text
         else
           result.reason()
 
