@@ -70,7 +70,7 @@ caravan([
 If passing an object to the `urls`, can switch the verb, and send a header.
 
 #### `url/uri`: string
-#### `method`: object (default:`'GET'`)
+#### `method`: string (default:`'GET'`)
 #### `headers`: object (default:`null`)
 #### `data`: object (default:`null`)
 
