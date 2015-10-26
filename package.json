@@ -1,13 +1,13 @@
 {
   "name": "caravan",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha",
   "description": "throttle GET requests for easy to scrape",
 
   "main": "lib",
   "files": ["lib"],
   "scripts": {
     "start": "jasminetea --file index.coffee --watch",
-    "localhost": "zuul test --ui jasmine2 --server \"coffee test/app.coffee\" --local 59798 --open",
+    "localhost": "zuul test --ui jasmine2 --local 59798 --open",
 
     "test": "jasminetea --file index.coffee --lint --cover --report",
     "test-cloud": "zuul test --sauce-connect",
@@ -29,6 +29,7 @@
 
   "dependencies": {
     "bluebird": "^2.9.34",
+    "merge": "^1.2.0",
     "object-assign": "^4.0.1",
     "superagent": "^1.4.0",
     "throat": "^2.0.2"

@@ -3,28 +3,36 @@ Promise= require 'bluebird'
 throat= require 'throat'
 superagent= require 'superagent'
 
-objectAssign= require 'object-assign'
+merge= require 'merge'
 
 # Private
 verbs= [
-  'checkout'
-  'connect'
-  'copy'
-  'delete'
-  'get'
-  'head'
-  'lock'
-  'merge'
-  'mkactivity'
-  'mkcol'
-  'move'
-  'm-search'
-  'notify'
-  'options'
-  'patch'
-  'post'
-  'propfind'
-  'proppatch'
+  'checkout',
+  'connect',
+  'copy',
+  'delete',
+  'get',
+  'head',
+  'lock',
+  'merge',
+  'mkactivity',
+  'mkcol',
+  'move',
+  'm-search',
+  'notify',
+  'options',
+  'patch',
+  'post',
+  'propfind',
+  'proppatch',
+  'purge',
+  'put',
+  'report',
+  'search',
+  'subscribe',
+  'trace',
+  'unlock',
+  'unsubscribe',
 ]
 
 # Public
@@ -59,7 +67,7 @@ class Caravan
     options.method?= 'GET'
 
     if typeof url is 'object'
-      options= objectAssign options,url
+      options= merge options,url
       url= options.url ? options.uri
 
     return Promise.reject(new TypeError 'url/uri is not defined') unless url

@@ -55,14 +55,21 @@ describe 'caravan',->
       it 'otherwise pass to superagent',(done)->
         urls= 'http://superserver.berabou.me/'
         options=
-          headers: {foo:'bar'}
-          send: {baz:'beep'}
+          headers:
+            foo: 'bar'
+            baz: 'beep'
 
-        caravan urls,options
+          data:
+            hoge: 'fuga'
+            piyo: 'ogogo'
+
+        caravan.post urls,options
         .then ([request])->
-          expect(request.method).toBe 'GET'
+          expect(request.method).toBe 'POST'
           expect(request.headers.foo).toBe 'bar'
-          expect(request.data.baz).toBe 'beep'
+          expect(request.headers.baz).toBe 'beep'
+          expect(request.data.hoge).toBe 'fuga'
+          expect(request.data.piyo).toBe 'ogogo'
 
           done()
 
