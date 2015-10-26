@@ -28,9 +28,9 @@
   },
 
   "dependencies": {
-    "bluebird": "^2.9.34",
     "merge": "^1.2.0",
     "object-assign": "^4.0.1",
+    "q": "^1.4.1",
     "superagent": "^1.4.0",
     "throat": "^2.0.2"
   },

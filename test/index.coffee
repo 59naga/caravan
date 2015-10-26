@@ -74,7 +74,7 @@ describe 'caravan',->
           done()
 
   describe 'other verbs',->
-    it 'PATCH,GET,POST,PUT,DELETE',(done)->
+    it 'LOCK,GET,POST,PUT,DELETE',(done)->
       urls= [
         {url:'http://superserver.berabou.me/'}
         {url:'http://superserver.berabou.me/',method:'GET'}
@@ -84,16 +84,16 @@ describe 'caravan',->
         {url:'http://superserver.berabou.me/'}
       ]
       options=
-        method: 'PATCH'
+        method: 'LOCK'
         concurrency: 5
 
       caravan urls,options
       .then (responses)->
-        expect(responses[0].method).toBe 'PATCH'
+        expect(responses[0].method).toBe 'LOCK'
         expect(responses[1].method).toBe 'GET'
         expect(responses[2].method).toBe 'POST'
         expect(responses[3].method).toBe 'PUT'
         expect(responses[4].method).toBe 'DELETE'
-        expect(responses[5].method).toBe 'PATCH'
+        expect(responses[5].method).toBe 'LOCK'
 
         done()

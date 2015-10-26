@@ -1,6 +1,6 @@
 # Dependencies
-Promise= require 'bluebird'
-throat= require 'throat'
+Q= require 'q'
+throat= (require 'throat') Q.Promise
 superagent= require 'superagent'
 
 merge= require 'merge'
@@ -70,9 +70,9 @@ class Caravan
       options= merge options,url
       url= options.url ? options.uri
 
-    return Promise.reject(new TypeError 'url/uri is not defined') unless url
+    return Q.reject(new TypeError 'url/uri is not defined') unless url
 
-    new Promise (resolve,reject)->
+    new Q.Promise (resolve,reject)->
       request= superagent options.method,url
 
       for key,value of options
@@ -92,25 +92,24 @@ class Caravan
   settle: (promises,options={})=>
     options.raw?= false
 
-    Promise.settle promises
+    Q.allSettled promises
     .then (results)->
       for result in results
-        if result.isRejected()
-          result.reason()
+        if result.state isnt 'fulfilled'
+          result.reason
 
         else
-          value= result.value()
-          hasKeys= (Object.keys value.body).length > 0
+          hasKeys= (Object.keys result.value.body).length > 0
 
           switch
             when options.raw
-              value
+              result.value
 
             when hasKeys
-              value.body
+              result.value.body
 
             else
-              value.text
+              result.value.text
 
 module.exports= new Caravan
 module.exports.Caravan= Caravan
