@@ -23,4 +23,3 @@ browserify:
         - .js
         - .json
         - .coffee
-  - ignore: ./test/app.coffee

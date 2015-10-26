@@ -13,7 +13,7 @@ $ npm install caravan --save
 
 ```js
 var caravan= require('caravan');
-console.log(caravan); //object
+console.log(caravan); //function
 ```
 
 ### Via bower
@@ -25,28 +25,37 @@ $ bower install caravan --save
 ```html
 <script src="bower_components/caravan/caravan.min.js"></script>
 <script>
-  console.log(caravan); //object
+  console.log(caravan); //function
+</script>
+```
+
+### Via rawgit.com(the simple way)
+
+```html
+<script src="https://cdn.rawgit.com/59naga/caravan/master/caravan.min.js"></script>
+<script>
+  console.log(caravan); //function
 </script>
 ```
 
 # API
 
-## .fetchAll(requests,options) -> Promise(responses)
+## caravan(urls,options) -> Promise(responses)
 
-Do throttle request to requests. return the bodies and errors.
+Do throttle request to urls. return the bodies and errors.
 
 ```js
-caravan.fetchAll([
+caravan([
   'http://romanize.berabou.me/foo',
-  {url:'http://romanize.berabou.me/bar'},
-  {url:'http://romanize.berabou.me/baz',method:'GET'},
+  'http://romanize.berabou.me/bar',
+  'http://romanize.berabou.me/baz',
   'http://localhost:404/notfound',
 ])
 .then(console.log);
 //[
-//  '"foo"',
-//  '"bar"',
-//  '"baz"',
+//  'foo',
+//  'bar',
+//  'baz',
 //  {
 //    [Error: connect ECONNREFUSED]
 //    code: 'ECONNREFUSED',
@@ -56,37 +65,112 @@ caravan.fetchAll([
 //]
 ```
 
-### Options
+### Custmyze request
 
-#### `concurrency`: number (default:1)
+If passing an object to the `urls`, can switch the verb, and send a header.
+
+#### `url/uri`: object (default:`'GET'`)
+#### `method`: object (default:`'GET'`)
+#### `headers`: object (default:`null`)
+#### `data`: object (default:`null`)
+
+It uses as an argument of [superagent](https://github.com/visionmedia/superagent#installation)
+
+```js
+caravan([
+  {
+    url: 'http://superserver.berabou.me/1',
+    method: 'GET',
+    headers: {foo:'bar'},
+    data: {baz:'beep'},
+  },
+  {
+    url: 'http://superserver.berabou.me/2',
+    method: 'POST',
+    headers: {foo:'bar'},
+    data: {baz:'beep'},
+  },
+  {
+    url: 'http://superserver.berabou.me/3',
+    method: 'PUT',
+    headers: {foo:'bar'},
+    data: {baz:'beep'},
+  },
+  {
+    url: 'http://superserver.berabou.me/4',
+    method: 'DELETE',
+    headers: {foo:'bar'},
+    data: {baz:'beep'},
+  },
+])
+.then(function(responses){
+  console.log(response) // verbs result
+});
+```
+
+### Caravan options
+
+#### `concurrency`: number (default:`1`)
 
 Specify the number of throttle requests.
 
 ```js
-var requests= [
+var url= [
   'http://localhost/ping/1s',
-  {url:'http://localhost/ping/2s'},
-  {url:'http://localhost/ping/3s',method:'GET'},
+  'http://localhost/ping/2s',
+  'http://localhost/ping/3s',
 ];
 
-var begin1= Date.now();
-caravan.fetchAll(requests,{concurrency:1})
+console.time('concurrency is 1');
+caravan(url,{concurrency:1})
 .then(function(){
-  console.log('concurrency is 1 =>',Date.now()-begin1);
+  console.timeEnd('concurrency is 1');
 });
-// concurrency is 1 => 6029
+// concurrency is 1: 3s
 
-var begin2= Date.now();
-caravan.fetchAll(requests,{concurrency:3})
+console.time('concurrency is 3');
+caravan(url,{concurrency:3})
 .then(function(){
-  console.log('concurrency is 3 =>',Date.now()-begin2);
+  console.timeEnd('concurrency is 3');
 });
-// concurrency is 3 => 3014
+// concurrency is 3: 1s
 ```
 
-# See also 
-* [request(via npm)](https://github.com/request/request#readme)
-* [xhr(via bower)](https://github.com/Raynos/xhr#readme)
+#### `raw`: bool (default:`false`)
+
+if true, response contains detailed information such as headers, statuscode...
+
+```js
+caravan('http://romanize.berabou.me/foo',{raw:true})
+.then(function(responses){
+  console.log(responses[0]);
+  // {
+  //   ...
+  //   links: {},
+  //   text: '"foo"',
+  //   body: 'foo',
+  //   files: {},
+  //   buffered: true,
+  //   headers: 
+  //    { 'x-powered-by': 'Express',
+  //      'access-control-allow-origin': '*',
+  //      'access-control-allow-headers': 'Content-Type',
+  //      'access-control-allow-methods': 'PUT, GET, POST, DELETE, OPTIONS',
+  //      'content-type': 'application/json; charset=utf-8',
+  //      'content-length': '5',
+  //      etag: 'W/"5-DbpSDjNcBrqSQKl46UVYeA"',
+  //      date: 'Mon, 26 Oct 2015 07:55:43 GMT',
+  //      connection: 'close' },
+  //   header: { ... },
+  //   statusCode: 200,
+  //   status: 200,
+  //   statusType: 2,
+  //   info: false,
+  //   ok: true,
+  //   ...
+  // }
+});
+```
 
 License
 ---

@@ -1,6 +1,6 @@
 {
   "name": "caravan",
-  "version": "0.0.0-beta",
+  "version": "0.0.0",
   "description": "throttle GET requests for easy to scrape",
 
   "main": "lib",
@@ -10,7 +10,7 @@
     "localhost": "zuul test --ui jasmine2 --server \"coffee test/app.coffee\" --local 59798 --open",
 
     "test": "jasminetea --file index.coffee --lint --cover --report",
-    "test-cloud": "zuul test",
+    "test-cloud": "zuul test --sauce-connect",
 
     "prepublish": "node -e \"if(process.env.TRAVIS){}else{process.exit(1)}\" && npm run compile || echo skip prepublish",
     "compile": "coffee --bare --compile index.coffee",
@@ -29,6 +29,7 @@
 
   "dependencies": {
     "bluebird": "^2.9.34",
+    "object-assign": "^4.0.1",
     "superagent": "^1.4.0",
     "throat": "^2.0.2"
   },
@@ -38,18 +39,15 @@
     "jasminetea": "^0.2.1",
     "object-parser-cli": "0.0.1"
   },
-  "extraDependencies": {
-    "coffee-script": "^1.9.3",
-
-    "zuul": "^3.0.0",
-
-    "browserify": "^10.2.4",
-    "coffeeify": "^1.1.0",
-    "exorcist": "^0.4.0",
-    "uglifyjs": "^2.4.10"
-  },
   
   "keywords": [
+    "http",
+    "ajax",
+    "request",
+    "superagent",
+    "throttle",
+    "concurrency",
+    "parallelism"
   ],
   "author": "59naga <i59naga@icloud.com> (http://berabou.me)",
   "license": "MIT",
