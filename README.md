@@ -65,7 +65,7 @@ caravan([
 //]
 ```
 
-### Custmyze request
+### Customize request
 
 If passing an object to the `urls`, can switch the verb, and send a header.
 
