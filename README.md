@@ -54,7 +54,7 @@ var urls= [
 ];
 
 // do serial (slowly)
-caravan(urls).then(console.log);
+caravan(urls).then(console.log.bind(console));
 //[
 //  'foo',
 //  'bar',
@@ -68,21 +68,21 @@ caravan(urls).then(console.log);
 //]
 
 // do parallel (quickly)
-caravan(urls,{concurrency:4}).then(console.log);
+caravan(urls,{concurrency:4}).then(console.log.bind(console));
 
 // do graceful (wait a ms)
-caravan(urls,{delay:2000}).then(console.log);
+caravan(urls,{delay:2000}).then(console.log.bind(console));
 ```
 
 Or, usage follows.
 
 ```js
-caravan.get('http://romanize.berabou.me/foo').then(console.log);
-caravan.get(['http://romanize.berabou.me/bar']).then(console.log);
+caravan.get('http://romanize.berabou.me/foo').then(console.log.bind(console));
+caravan.get(['http://romanize.berabou.me/bar']).then(console.log.bind(console));
 
-caravan.post('http://romanize.berabou.me/baz').then(console.log);
-caravan.put('http://romanize.berabou.me/beep').then(console.log);
-caravan.delete('http://romanize.berabou.me/boop').then(console.log);
+caravan.post('http://romanize.berabou.me/baz').then(console.log.bind(console));
+caravan.put('http://romanize.berabou.me/beep').then(console.log.bind(console));
+caravan.delete('http://romanize.berabou.me/boop').then(console.log.bind(console));
 ```
 
 ### Customize request
