@@ -12,8 +12,8 @@ $ npm install caravan --save
 ```
 
 ```js
-var caravan= require('caravan');
-console.log(caravan); //function
+var caravan= require('caravan')
+console.log(caravan) //function
 ```
 
 ### Via bower
@@ -25,7 +25,7 @@ $ bower install caravan --save
 ```html
 <script src="bower_components/caravan/caravan.min.js"></script>
 <script>
-  console.log(caravan); //function
+  console.log(caravan) //function
 </script>
 ```
 
@@ -34,7 +34,7 @@ $ bower install caravan --save
 ```html
 <script src="https://cdn.rawgit.com/59naga/caravan/96e63a0476b31e5b724e85bcf2ae6019cc5a1da3/caravan.min.js"></script>
 <script>
-  console.log(caravan); //function
+  console.log(caravan) //function
 </script>
 ```
 
@@ -51,10 +51,10 @@ var urls= [
   'http://romanize.berabou.me/bar',
   'http://romanize.berabou.me/baz',
   'http://localhost:404/notfound',
-];
+]
 
 // do serial (slowly)
-caravan(urls).then(console.log.bind(console));
+caravan(urls).then(console.log.bind(console))
 //[
 //  'foo',
 //  'bar',
@@ -68,21 +68,58 @@ caravan(urls).then(console.log.bind(console));
 //]
 
 // do parallel (quickly)
-caravan(urls,{concurrency:4}).then(console.log.bind(console));
+caravan(urls,{concurrency:4}).then(console.log.bind(console))
 
 // do graceful (wait a ms)
-caravan(urls,{delay:2000}).then(console.log.bind(console));
+caravan(urls,{delay:2000}).then(console.log.bind(console))
 ```
 
 Or, usage follows.
 
 ```js
-caravan.get('http://romanize.berabou.me/foo').then(console.log.bind(console));
-caravan.get(['http://romanize.berabou.me/bar']).then(console.log.bind(console));
+caravan.get('http://romanize.berabou.me/foo').then(console.log.bind(console))
+caravan.get(['http://romanize.berabou.me/bar']).then(console.log.bind(console))
 
-caravan.post('http://romanize.berabou.me/baz').then(console.log.bind(console));
-caravan.put('http://romanize.berabou.me/beep').then(console.log.bind(console));
-caravan.delete('http://romanize.berabou.me/boop').then(console.log.bind(console));
+caravan.post('http://romanize.berabou.me/baz').then(console.log.bind(console))
+caravan.put('http://romanize.berabou.me/beep').then(console.log.bind(console))
+caravan.delete('http://romanize.berabou.me/boop').then(console.log.bind(console))
+```
+
+## progress notifying
+
+[Promise](https://github.com/kriskowal/q#using-qpromise) will have a `.progress`. the registered callback will be Invoked every time the request is fulfilled or rejected.
+
+```js
+var urls= [
+  'http://romanize.berabou.me/foo',
+  'http://romanize.berabou.me/bar',
+  'http://romanize.berabou.me/baz',
+  'http://localhost:404/notfound',
+]
+
+caravan(urls)
+.progress((progress)=>{
+  console.log('progress: %s / %s',progress.index+1,urls.length)
+  console.log(progress.value)
+})
+.then((results)=>{
+  console.log('done')
+})
+// progress: 1 / 4
+// foo
+// progress: 2 / 4
+// bar
+// progress: 3 / 4
+// baz
+// progress: 4 / 4
+// { [Error: connect ECONNREFUSED 127.0.0.1:404]
+//   code: 'ECONNREFUSED',
+//   errno: 'ECONNREFUSED',
+//   syscall: 'connect',
+//   address: '127.0.0.1',
+//   port: 404,
+//   response: undefined }
+// done
 ```
 
 ### Customize request
@@ -123,9 +160,9 @@ caravan([
     data: {baz:'beep'},
   },
 ])
-.then(function(responses){
-  console.log(response) // verbs result
-});
+.then(results=>{
+  console.log(results)
+})
 ```
 
 ### Caravan options
@@ -138,13 +175,13 @@ Specify the delay a millsecond for next request.
 var urls= [
   'http://example.com/',
   'http://example.com/',
-];
+]
 
-console.time('deferred');
+console.time('deferred')
 caravan(url,{delay:1000})
-.then(function(){
-  console.timeEnd('deferred');
-});
+.then((results)=>{
+  console.timeEnd('deferred')
+})
 // deferred: 1s
 ```
 
@@ -157,20 +194,20 @@ var urls= [
   'http://localhost/ping/1s',
   'http://localhost/ping/2s',
   'http://localhost/ping/3s',
-];
+]
 
-console.time('concurrency is 1');
+console.time('concurrency is 1')
 caravan(url,{concurrency:1})
-.then(function(){
-  console.timeEnd('concurrency is 1');
-});
+.then((results)=>{
+  console.timeEnd('concurrency is 1')
+})
 // concurrency is 1: 6s
 
-console.time('concurrency is 3');
+console.time('concurrency is 3')
 caravan(url,{concurrency:3})
-.then(function(){
-  console.timeEnd('concurrency is 3');
-});
+.then((results)=>{
+  console.timeEnd('concurrency is 3')
+})
 // concurrency is 3: 3s
 ```
 
@@ -180,8 +217,8 @@ if true, response contains detailed information such as headers, statuscode...
 
 ```js
 caravan('http://romanize.berabou.me/foo',{raw:true})
-.then(function(responses){
-  console.log(responses[0]);
+.then((responses)=>{
+  console.log(responses[0])
   // {
   //   ...
   //   links: {},
@@ -194,7 +231,7 @@ caravan('http://romanize.berabou.me/foo',{raw:true})
   //      'access-control-allow-origin': '*',
   //      'access-control-allow-headers': 'Content-Type',
   //      'access-control-allow-methods': 'PUT, GET, POST, DELETE, OPTIONS',
-  //      'content-type': 'application/json; charset=utf-8',
+  //      'content-type': 'application/json charset=utf-8',
   //      'content-length': '5',
   //      etag: 'W/"5-DbpSDjNcBrqSQKl46UVYeA"',
   //      date: 'Mon, 26 Oct 2015 07:55:43 GMT',
@@ -207,7 +244,7 @@ caravan('http://romanize.berabou.me/foo',{raw:true})
   //   ok: true,
   //   ...
   // }
-});
+})
 ```
 
 License

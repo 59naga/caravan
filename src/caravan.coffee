@@ -74,7 +74,7 @@ class Caravan
 
     return Q.reject(new TypeError 'url/uri is not defined') unless url
 
-    new Q.Promise (resolve,reject)->
+    new Q.Promise (resolve,reject,notify)=>
       request= superagent options.method,url
 
       for key,value of options
@@ -85,35 +85,41 @@ class Caravan
 
         request[key] value
 
-      request.end (error,response)->
+      request.end (error,response)=>
+        notify error ? (@getBody response,options)
+
         setTimeout ->
           unless error
             resolve response
           else
             reject error
+          
         ,options.delay
 
   settle: (promises,options={})=>
     options.raw?= false
 
     Q.allSettled promises
-    .then (results)->
+    .then (results)=>
       for result in results
-        if result.state isnt 'fulfilled'
-          result.reason
+        if result.state is 'fulfilled'
+          @getBody result.value,options
 
         else
-          hasKeys= (Object.keys result.value.body).length > 0
+          result.reason
 
-          switch
-            when options.raw
-              result.value
+  getBody: (response,options={})=>
+    hasKeys= (Object.keys response.body).length > 0
 
-            when hasKeys
-              result.value.body
+    switch
+      when options.raw
+        response
 
-            else
-              result.value.text
+      when hasKeys
+        response.body
+
+      else
+        response.text
 
 module.exports= new Caravan
 module.exports.Caravan= Caravan

@@ -12,10 +12,17 @@ describe 'caravan',->
       options= {}
 
       caravan urls,options
+      .progress (progress)->
+        expect(progress.index).toBe 0
+        expect(progress.value.method).toBe 'GET'
+        expect(progress.value.url).toBe '/foo'
+        expect(progress.value.data).toBe undefined
+
       .then ([request])->
         expect(request.method).toBe 'GET'
         expect(request.url).toBe '/foo'
         expect(request.data).toBe undefined
+
         done()
 
     it 'parallel',(done)->
@@ -104,7 +111,7 @@ describe 'caravan',->
       ]
       options=
         method: 'LOCK'
-        concurrency: 5
+        concurrency: 6
 
       caravan urls,options
       .then (responses)->
