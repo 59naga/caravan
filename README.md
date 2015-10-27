@@ -130,7 +130,7 @@ caravan([
 
 ### Caravan options
 
-#### `delay`: number (default:`1`)
+#### `delay`: number (default:`0`)
 
 Specify the delay a millsecond for next request.
 
