@@ -32,7 +32,7 @@ $ bower install caravan --save
 ### Via rawgit.com(the simple way)
 
 ```html
-<script src="https://cdn.rawgit.com/59naga/caravan/217eae956e4fe6c2ec55407a6086bd7f143c9afe/caravan.min.js"></script>
+<script src="https://cdn.rawgit.com/59naga/caravan/v0.0.2/caravan.min.js"></script>
 <script>
   console.log(caravan) //function
 </script>
