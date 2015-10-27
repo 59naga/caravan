@@ -2,7 +2,7 @@
 
 [![Sauce Test Status][sauce-image]][sauce]
 
-> throttle requests for easy to scrape.
+> throttle REST request client.
 
 ## Installation
 ### Via npm
@@ -40,18 +40,21 @@ $ bower install caravan --save
 
 # API
 
-## caravan(urls,options) -> Promise(responses)
+## caravan(urls,options) -> Promise(response*s*)
 
-Do throttle request to urls. return the bodies and errors.
+Do throttle request to `urls`. return the *bodies* and errors.
+It is handled one by one, but can change at `options.concurrency`.
 
 ```js
-caravan([
+var urls= [
   'http://romanize.berabou.me/foo',
   'http://romanize.berabou.me/bar',
   'http://romanize.berabou.me/baz',
   'http://localhost:404/notfound',
-])
-.then(console.log);
+];
+
+// do serial (slowly)
+caravan(urls).then(console.log);
 //[
 //  'foo',
 //  'bar',
@@ -63,11 +66,28 @@ caravan([
 //    syscall: 'connect'
 //  }
 //]
+
+// do parallel (quickly)
+caravan(urls,{concurrency:4}).then(console.log);
+
+// do graceful (wait a ms)
+caravan(urls,{delay:2000}).then(console.log);
+```
+
+Or, usage follows.
+
+```js
+caravan.get('http://romanize.berabou.me/foo').then(console.log);
+caravan.get(['http://romanize.berabou.me/bar']).then(console.log);
+
+caravan.post('http://romanize.berabou.me/baz').then(console.log);
+caravan.put('http://romanize.berabou.me/beep').then(console.log);
+caravan.delete('http://romanize.berabou.me/boop').then(console.log);
 ```
 
 ### Customize request
 
-If passing an object to the `urls`, can switch the verb, and send a header.
+If passing an object to the `urls`, can switch the verb, and send a header and data.
 
 #### `url/uri`: string
 #### `method`: string (default:`'GET'`)
@@ -110,12 +130,30 @@ caravan([
 
 ### Caravan options
 
+#### `delay`: number (default:`1`)
+
+Specify the delay a millsecond for next request.
+
+```js
+var urls= [
+  'http://example.com/',
+  'http://example.com/',
+];
+
+console.time('deferred');
+caravan(url,{delay:1000})
+.then(function(){
+  console.timeEnd('deferred');
+});
+// deferred: 1s
+```
+
 #### `concurrency`: number (default:`1`)
 
 Specify the number of throttle requests.
 
 ```js
-var url= [
+var urls= [
   'http://localhost/ping/1s',
   'http://localhost/ping/2s',
   'http://localhost/ping/3s',
@@ -126,14 +164,14 @@ caravan(url,{concurrency:1})
 .then(function(){
   console.timeEnd('concurrency is 1');
 });
-// concurrency is 1: 3s
+// concurrency is 1: 6s
 
 console.time('concurrency is 3');
 caravan(url,{concurrency:3})
 .then(function(){
   console.timeEnd('concurrency is 3');
 });
-// concurrency is 3: 1s
+// concurrency is 3: 3s
 ```
 
 #### `raw`: bool (default:`false`)

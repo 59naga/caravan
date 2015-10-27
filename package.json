@@ -1,7 +1,7 @@
 {
   "name": "caravan",
-  "version": "0.0.1-beta",
-  "description": "throttle GET requests for easy to scrape",
+  "version": "0.0.1",
+  "description": "throttle REST request client",
 
   "main": "lib",
   "files": ["lib"],

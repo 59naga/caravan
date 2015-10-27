@@ -70,6 +70,8 @@ class Caravan
       options= merge options,url
       url= options.url ? options.uri
 
+    options.delay= (options.delay|0) # normalize
+
     return Q.reject(new TypeError 'url/uri is not defined') unless url
 
     new Q.Promise (resolve,reject)->
@@ -84,10 +86,12 @@ class Caravan
         request[key] value
 
       request.end (error,response)->
-        unless error
-          resolve response
-        else
-          reject error
+        setTimeout ->
+          unless error
+            resolve response
+          else
+            reject error
+        ,options.delay
 
   settle: (promises,options={})=>
     options.raw?= false

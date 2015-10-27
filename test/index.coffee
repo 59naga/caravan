@@ -7,7 +7,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL= 10000
 # Specs
 describe 'caravan',->
   describe 'default GET',->
-    it 'single',(done)->
+    it 'serial',(done)->
       urls= 'http://superserver.berabou.me/foo' # See also 59naga/superserver
       options= {}
 
@@ -18,7 +18,7 @@ describe 'caravan',->
         expect(request.data).toBe undefined
         done()
 
-    it 'multiple',(done)->
+    it 'parallel',(done)->
       urls= [
         'http://superserver.berabou.me/foo'
         'http://superserver.berabou.me/bar'
@@ -36,6 +36,25 @@ describe 'caravan',->
         expect(responses[2].url).toBe '/baz'
         expect(responses[3].url).toBe '/beep'
         expect(responses[4].url).toBe '/boop'
+
+        done()
+
+    it 'graceful',(done)->
+      urls= [
+        'http://superserver.berabou.me/foo'
+        'http://superserver.berabou.me/bar'
+      ]
+      options=
+        delay: 2000
+
+      start= Date.now()
+
+      caravan urls,options
+      .then (responses)->
+        expect(responses[0].url).toBe '/foo'
+        expect(responses[1].url).toBe '/bar'
+
+        expect(Date.now()-start).not.toBeLessThan options.delay
 
         done()
 
@@ -74,7 +93,7 @@ describe 'caravan',->
           done()
 
   describe 'other verbs',->
-    it 'LOCK,GET,POST,PUT,DELETE',(done)->
+    it 'GET,POST,PUT,DELETE(default LOCK)',(done)->
       urls= [
         {url:'http://superserver.berabou.me/'}
         {url:'http://superserver.berabou.me/',method:'GET'}
